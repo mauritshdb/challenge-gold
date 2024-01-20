@@ -12,6 +12,11 @@ class Controller {
         console.log(users.every(uuu => uuu instanceof user));
         return res.status(200).json(formatRes(users))
     }
+    static async getAllOrder(req, res) {
+        const orders = await order.findAll();
+        console.log(orders.every(ooo => ooo instanceof order));
+        return res.status(200).json(formatRes(orders))
+    }
 
     static async getProductById(req, res) {
         try {
