@@ -1,9 +1,5 @@
-const dataProducts = require('./database/products.json')
-const dataUsers = require('./database/users.json')
-const fs = require("fs")
 const { formatRes } = require('./reformat')
 const { user, item } = require("./models")
-const { where } = require('sequelize')
 
 class Controller {
     static async getAllProducts(req, res) {
