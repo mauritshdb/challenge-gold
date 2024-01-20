@@ -257,5 +257,20 @@ class Controller {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
     }
+    static async deleteOrder(req, res) {
+        let id = +req.params.id;
+        let ord = await order.getById(id)
+        try {
+            await order.destroy({
+                where: {
+                    id,
+                }
+            });
+            if (!ord) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+            return res.status(200).json(formatRes(ord, "Successfully deleted!"))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+        }
+    }
 }
 module.exports = { Controller }
