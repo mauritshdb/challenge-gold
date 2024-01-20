@@ -99,7 +99,7 @@ class Controller {
     }
     static async updateUserById(req, res) {
         let id = +req.params.id;
-        let usr = await item.getById(id)
+        let usr = await user.getById(id)
         try {
 
             let { full_name, address, email, password } = req.body
@@ -123,31 +123,37 @@ class Controller {
         }
     }
 
-    static deleteProduct(req, res) {
-        let id = +req.params.id, statusCode = 200
+    static async deleteProduct(req, res) {
+        let id = +req.params.id;
+        let barang = await item.getById(id)
 
-        const data = dataProducts.find(i => i.id === +id)
-
-        if (data === undefined) {
-            statusCode = 404
-            message = `Product with id ${id} not found.`
+        try {
+            await item.destroy({
+                where: {
+                    id,
+                }
+            });
+            if(!barang) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+            return res.status(200).json(formatRes(barang, "Successfully deleted!"))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
-        let temp = dataProducts.filter(pst => pst.id !== id)
-        fs.writeFileSync("./database/products.json", JSON.stringify(temp), "utf-8")
-        return res.status(statusCode).json(formatRes())
     }
-    static deleteUser(req, res) {
-        let id = +req.params.id, statusCode = 200
+    static async deleteUser(req, res) {
+        let id = +req.params.id;
+        let usr = await user.getById(id)
 
-        const data = dataUsers.find(i => i.id === +id)
-
-        if (data === undefined) {
-            statusCode = 404
-            message = `User with id ${id} not found.`
+        try {
+            await user.destroy({
+                where: {
+                    id,
+                }
+            });
+            if(!usr) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+            return res.status(200).json(formatRes(usr, "Successfully deleted!"))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
-        let temp = dataUsers.filter(pst => pst.id !== id)
-        fs.writeFileSync("./database/users.json", JSON.stringify(temp), "utf-8")
-        return res.status(statusCode).json(formatRes())
     }
 }
 module.exports = { Controller }
