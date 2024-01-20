@@ -146,12 +146,12 @@ class Controller {
             await order.update({ user_id, item_id, quantity_order }, {
                 where: { id: id }
             })
-                .then(() => console.log("Successfully updated!"))
+                .then(() => console.log("Successfully updated! 1"))
                 .catch((err) => {
                     console.error(err)
                 })
 
-            return res.status(200).json(formatRes(barang, "Successfully updated!"))
+            return res.status(200).json(formatRes(ord, "Successfully updated! 2"))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
