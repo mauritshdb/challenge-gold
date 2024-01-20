@@ -65,6 +65,10 @@ class Controller {
             updatedAt: new Date()
         }
 
+        item.create(data).then((result) => {
+            console.log(result.dataValues);
+        }).catch((err) => console.error(err))
+
         return res.status(201).json(formatRes(data))
     }
 
