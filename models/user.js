@@ -14,16 +14,21 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getById(id) {
-      let usr = await user.findOne({
-        where: {
-          id,
-        }
-      });
-      if(!usr) throw new Error("User not found!");
-
-      let result = usr.dataValues;
-
-      return result
+      try {
+        let usr = await user.findOne({
+          where: {
+            id,
+          }
+        });
+        if(!usr) throw new Error("User not found!");
+  
+        let result = usr.dataValues;
+  
+        return result
+        
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
   user.init({
