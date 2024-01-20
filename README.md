@@ -16,15 +16,15 @@ post add product:
 ### get, put, delete
 
 get all users:
-> `/api/v1/users`
+`/api/v1/users`
 
 get all products/items:
-> `/api/v1/products`
+`/api/v1/products`
 
 get,put,delete user by id:
-> `/api/v1/users/:id`
+`/api/v1/users/:id`
 
 get,put,delete product by id:
-> `/api/v1/products/:id`
+`/api/v1/products/:id`
 
 [postman library](https://google.com/search?q=in+progress)
