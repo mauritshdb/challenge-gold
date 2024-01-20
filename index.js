@@ -1,6 +1,7 @@
 const express = require('express')
 const colors = require('colors')
 const {rooter} = require('./router/route')
+const { Sequelize } = require('sequelize');
 
 const app = express()
 
