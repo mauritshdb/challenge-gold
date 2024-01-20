@@ -1,5 +1,5 @@
 const { formatRes } = require('./reformat')
-const { user, item } = require("./models")
+const { user, item, order } = require("./models")
 
 class Controller {
     static async getAllProducts(req, res) {
@@ -53,6 +53,53 @@ class Controller {
         return res.status(201).json(formatRes(data))
     }
 
+    static login(req, res) {
+        //code here lmao
+    }
+
+    static createOrder(req, res) {
+        let {user_id, item_id, quantity_order} = req.body
+
+        let data = {
+            user_id: user_id,
+            item_id: item_id,
+            quantity_order: quantity_order,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }
+
+        order.create(data).then((result) => {
+            console.log(result.dataValues);
+        }).catch((err) => console.error(err))
+
+        return res.status(201).json(formatRes(data));
+    }
+
+    static async updateOrderAdmin(req, res) {
+        let id = +req.params.id;
+        let ord = await order.getById(id)
+        try {
+
+            let { user_id, item_id, quantity_order } = req.body
+
+            ord.user_id = user_id ? user_id : ord.user_id
+            ord.item_id = item_id ? item_id : ord.item_id
+            ord.quantity_order = quantity_order ? quantity_order : ord.quantity_order
+
+            await item.update({ user_id, item_id, quantity_order }, {
+                where: { id: id }
+            })
+                .then(() => console.log("Successfully updated!"))
+                .catch((err) => {
+                    console.error(err)
+                })
+
+            return res.status(200).json(formatRes(barang, "Successfully updated!"))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+        }
+    }
+
     static addProduct(req, res) {
         let { item_name, item_price, item_stock } = req.body
 
@@ -68,7 +115,7 @@ class Controller {
             console.log(result.dataValues);
         }).catch((err) => console.error(err))
 
-        return res.status(201).json(formatRes(data))
+        return res.status(201).json(formatRes(data));
     }
 
     static async updateProductById(req, res) {
