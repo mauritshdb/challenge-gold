@@ -97,29 +97,30 @@ class Controller {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
     }
-    static updateUserById(req, res) {
-        let id = +req.params.id, statusCode = 200
-        const data = dataUsers.find(i => i.id === +id)
+    static async updateUserById(req, res) {
+        let id = +req.params.id;
+        let usr = await item.getById(id)
+        try {
 
-        if (data === undefined) {
-            statusCode = 404
-            message = `User with id ${req.params.id} not found.`
-            return res.status(statusCode).json(formatRes(data, message))
+            let { full_name, address, email, password } = req.body
+
+            usr.full_name = full_name ? full_name : usr.full_name
+            usr.address = address ? address : usr.address
+            usr.email = email ? email : usr.email
+            usr.password = password ? password : usr.password
+
+            await user.update({ full_name, address, email, password }, {
+                where: { id: id }
+            })
+                .then(() => console.log("Successfully updated!"))
+                .catch((err) => {
+                    console.error(err)
+                })
+
+            return res.status(200).json(formatRes(usr, "Successfully updated!"))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
-
-        let { username, password } = req.body
-        data.username = username ? username : data.username
-        data.password = password ? password : data.password
-
-        for (let i = 0; i < dataUsers.length; i++) {
-            if (dataUsers[i].id === id) {
-                dataUsers[i] = data
-                break
-            }
-        }
-
-        fs.writeFileSync("./database/users.json", JSON.stringify(dataUsers), "utf-8")
-        return res.status(statusCode).json(formatRes(data))
     }
 
     static deleteProduct(req, res) {
