@@ -17,6 +17,7 @@ class Controller {
         try {
             let id = +req.params.id;
             let barang = await item.getById(id)
+            if (!barang) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(barang))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
@@ -26,6 +27,7 @@ class Controller {
         try {
             let id = +req.params.id;
             let usr = await user.getById(id)
+            if(!usr) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(usr))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
@@ -129,7 +131,7 @@ class Controller {
                     id,
                 }
             });
-            if(!barang) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+            if (!barang) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(barang, "Successfully deleted!"))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
@@ -145,7 +147,7 @@ class Controller {
                     id,
                 }
             });
-            if(!usr) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+            if (!usr) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(usr, "Successfully deleted!"))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
