@@ -9,7 +9,7 @@ rooter.route("/products/:id").get(Controller.getProductById).put(Controller.upda
 rooter.route("/addproduct").post(Controller.addProduct)
 rooter.route("/adduser").post(Controller.registerUser)
 rooter.route("/createorder").post(Controller.createOrder)
-rooter.route("/showorder").get(Controller.getAllOrder)
+rooter.route("/orders").get(Controller.getAllOrder)
 rooter.route("/updateorder").put(Controller.updateOrder)
 
 rooter.route("/users").get(Controller.getAllUsers)
