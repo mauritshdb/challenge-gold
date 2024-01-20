@@ -96,34 +96,6 @@ class Controller {
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
-
-
-        // let id = +req.params.id, statusCode = 200
-        // const data = dataProducts.find(i => i.id === +id)
-
-        // if(data === undefined) {
-        //     statusCode = 404
-        //     message = `Product with id ${req.params.id} not found.`
-        //     return res.status(statusCode).json(formatRes(data, message))
-        // }
-
-        // let {name, category, price, stock} = req.body
-        // data.name = name ? name : data.name
-        // data.category = category ? category : data.category
-        // data.price = price ? price : data.price
-        // data.stock = stock ? stock : data.stock
-
-        // for (let i = 0; i < dataProducts.length; i++) {
-        //     if(dataProducts[i].id === id) {
-        //         dataProducts[i] = data
-        //         break
-        //     }
-        // }
-
-        // fs.writeFileSync("./database/products.json", JSON.stringify(dataProducts), "utf-8")
-
-
-        // return res.status(statusCode).json(formatRes(data))
     }
     static updateUserById(req, res) {
         let id = +req.params.id, statusCode = 200
