@@ -9,6 +9,7 @@ rooter.route("/products/:id").get(Controller.getProductById).put(Controller.upda
 rooter.route("/addproduct").post(Controller.addProduct)
 rooter.route("/adduser").post(Controller.registerUser)
 rooter.route("/createorder").post(Controller.createOrder)
+rooter.route("/updateOrder").put(Controller.updateOrder)
 
 rooter.route("/users").get(Controller.getAllUsers)
 rooter.route("/users/:id").get(Controller.getUserById).put(Controller.updateUserById).delete(Controller.deleteUser)

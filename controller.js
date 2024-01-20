@@ -75,7 +75,7 @@ class Controller {
         return res.status(201).json(formatRes(data));
     }
 
-    static async updateOrderAdmin(req, res) {
+    static async updateOrder(req, res) {
         let id = +req.params.id;
         let ord = await order.getById(id)
         try {
