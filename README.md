@@ -7,8 +7,11 @@ api endpoint:
 
 ### post
 
-post register user: `/api/v1/adduser`
-post add product: `/api/v1/addproduct`
+post register user: 
+`/api/v1/adduser`
+
+post add product: 
+`/api/v1/addproduct`
 
 ### get
 
