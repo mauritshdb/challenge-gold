@@ -15,3 +15,5 @@ get user by id:
 get product by id:
 `/api/v1/products/:id`
 
+post register user: `/api/v1/adduser`
+post add product: `/api/v1/addproduct`
