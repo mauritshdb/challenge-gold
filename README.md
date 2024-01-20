@@ -27,4 +27,4 @@ get,put,delete user by id:
 get,put,delete product by id:
 `/api/v1/products/:id`
 
-[postman library](https://google.com/search?q=in+progress)
+[postman json library](https://raw.githubusercontent.com/mauritshdb/challenge-gold/main/Binar%20Gold.postman_collection.json)
