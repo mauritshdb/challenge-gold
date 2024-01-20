@@ -2,67 +2,69 @@ const dataProducts = require('./database/products.json')
 const dataUsers = require('./database/users.json')
 const fs = require("fs")
 const { formatRes } = require('./reformat')
+const { user, item } = require("./models")
 
 class Controller {
-    static getAllProducts(req, res){
-        return res.status(200).json(formatRes(dataProducts))
+    static async getAllProducts(req, res){
+        const items = await item.findAll();
+        console.log(items.every(iii => uuu instanceof item));
+        return res.status(200).json(formatRes(items))
     }
-    static getAllUsers(req, res){
-        return res.status(200).json(formatRes(dataUsers))
+    static async getAllUsers(req, res){
+        const users = await user.findAll();
+        console.log(users.every(uuu => uuu instanceof user));
+        return res.status(200).json(formatRes(users))
     }
 
-    static getProductById(req, res) {
-        let statusCode = 200, message = undefined
-        const data = dataProducts.find(i => i.id === +req.params.id)
-
-        if(data === undefined) {
-            statusCode = 404
-            message = `Product with id ${req.params.id} not found.`
+    static async getProductById(req, res) {
+        try {
+            let id = +req.params.id;
+            let barang = await item.getById(id)
+            return res.status(200).json(formatRes(barang))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
-        return res.status(statusCode).json(formatRes(data, message))
     }
-    static getUserById(req, res) {
-        let statusCode = 200, message = undefined
-        const data = dataUsers.find(i => i.id === +req.params.id)
-
-        if(data === undefined) {
-            statusCode = 404
-            message = `User with id ${req.params.id} not found.`
+    static async getUserById(req, res) {
+        try {
+            let id = +req.params.id;
+            let usr = await user.getById(id)
+            return res.status(200).json(formatRes(usr))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
-        return res.status(statusCode).json(formatRes(data, message))
     }
 
     static registerUser(req, res) {
-        let {username, password} = req.body
-
-        let id = dataUsers[dataUsers.length - 1].id + 1
+        let {full_name, address, email, password} = req.body
 
         let data = {
-            id: id,
-            username: username,
-            password: password
+            full_name: full_name,
+            address: address,
+            email: email,
+            password: password,
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
 
-        dataUsers.push(data)
-        fs.writeFileSync("./database/users.json", JSON.stringify(dataUsers), "utf-8")
+        user.create(data).then((result) => {
+            console.log(result.dataValues);
+        }).catch((err) => console.error(err))
+
         return res.status(201).json(formatRes(data))
     }
 
     static addProduct(req, res) {
-        let {name, category, price, stock} = req.body
-
-        let id = dataProducts[dataProducts.length - 1].id + 1
+        let {item_name, item_price, item_stock} = req.body
 
         let data = {
-            id: id,
-            name: name,
-            category: category,
-            price: price,
-            stock: stock
+            item_name: item_name,
+            item_price: item_price,
+            item_stock: item_stock,
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
 
-        dataProducts.push(data)
-        fs.writeFileSync("./database/products.json", JSON.stringify(dataProducts), "utf-8")
         return res.status(201).json(formatRes(data))
     }
 
