@@ -1,5 +1,6 @@
 const { formatRes } = require('./reformat')
-const { user, item, order } = require("./models")
+const { user, item, order } = require("./models");
+const jwt = require('jsonwebtoken')
 
 class Controller {
     static async getAllProducts(req, res) {
@@ -32,7 +33,7 @@ class Controller {
         try {
             let id = +req.params.id;
             let usr = await user.getById(id)
-            if(!usr) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+            if (!usr) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(usr))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
@@ -44,6 +45,24 @@ class Controller {
             let ord = await order.getById(id)
             if (!ord) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(ord))
+        } catch (err) {
+            return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
+        }
+    }
+    static async getOrderByIdDetail(req, res) {
+        try {
+            let id = +req.params.id;
+            let ord = await order.getById(id)
+            let usr = await user.getById(ord.user_id)
+            let itm = await item.getById(ord.item_id)
+            let data = {
+                full_name: usr.full_name,
+                item_name: itm.item_name,
+                quantity: ord.quantity_order,
+                price: itm.item_price,
+                shipmentTo: usr.address
+            }
+            return res.status(200).json(formatRes(data))
         } catch (err) {
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
@@ -68,12 +87,35 @@ class Controller {
         return res.status(201).json(formatRes(data))
     }
 
-    static login(req, res) {
-        //code here lmao
+    static async login(req, res) {
+        //code here lmao;
+        const email = req.body.email.trim();
+        const password = req.body.password.trim();
+        try {
+            let usr = await user.findOne({ where: { email: email } });
+            if (password !== usr.password) {
+                console.log("Auth: Password Incorrect!");
+                return res.status(422).json(formatRes(null, "Incorrect password!"))
+            }
+
+            let data = {
+                token: jwt.sign({
+                    data: {
+                        full_name: usr.full_name,
+                        email: usr.email,
+                    }
+                }, 'secret', { expiresIn: '1h' })
+            }
+
+            return res.status(200).json(formatRes(data))
+
+        } catch (err) {
+            return console.error(err);
+        }
     }
 
     static createOrder(req, res) {
-        let {user_id, item_id, quantity_order} = req.body
+        let { user_id, item_id, quantity_order } = req.body
 
         let data = {
             user_id: user_id,
