@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      item.hasOne(models.order, {
+        foreignKey: "item_id"
+      })
     }
 
     static async getById(id) {

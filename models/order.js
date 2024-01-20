@@ -11,6 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      order.hasMany(models.user, {
+        foreignKey: "id"
+      })
+    }
+    static async getById(id) {
+      try {
+        let ord = await order.findOne({
+          where: {
+            id,
+          }
+        });
+        if (!ord) throw new Error("Order not found");
+        let result = ord.dataValues;
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
   order.init({
