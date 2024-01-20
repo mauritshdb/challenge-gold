@@ -14,17 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static async getById(id) {
-      let barang = await item.findOne({
-        where: {
-          id,
-        }
-      });
-
-      if (!barang) throw new Error(`Item by ${id} not found`);
-
-      let result = barang.dataValues;
-
-      return result;
+      try {
+        let barang = await item.findOne({
+          where: {
+            id,
+          }
+        });
+        if (!barang) throw new Error("Item not found");
+        let result = barang.dataValues;
+        return result;
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
   item.init({
