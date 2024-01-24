@@ -1,3 +1,5 @@
+//Note: Router ini bisa dipisah pisah lagi sesuai konteks seperti user sendiri, product sendiri, order sendiri. Jangan dicampur seperti ini
+
 const express = require("express")
 const rooter = express.Router()
 

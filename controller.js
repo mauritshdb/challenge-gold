@@ -1,10 +1,14 @@
+//Note: controller ini bisa dipisah pisah lagi sesuai konteks seperti user sendiri, product sendiri, order sendiri. Jangan dicampur seperti ini
+
 const { formatRes } = require('./reformat')
 const { user, item, order } = require("./models");
 const jwt = require('jsonwebtoken')
 
 class Controller {
+    //Note: Jika pakai async await, selalu usahakan pakay try-catch
     static async getAllProducts(req, res) {
         const items = await item.findAll();
+        //Note: console.log tidak terpakai bisa dihapus saja
         console.log(items.every(iii => iii instanceof item));
         return res.status(200).json(formatRes(items))
     }
@@ -26,6 +30,7 @@ class Controller {
             if (!barang) return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
             return res.status(200).json(formatRes(barang))
         } catch (err) {
+            //Note: Pada dasarnya perlu mapping atau validasi lebih untuk menentukan sebuah error apakah memiliki status code tertentu seperti 400 atau 500. Bisa dipertimbangkan untuk melakukan mapping status code untuk error error yang mungkin terjadi. Note ini berlaku untuk endpoint lain
             return res.status(404).json(formatRes(null, `id ${req.params.id} not found!`))
         }
     }
@@ -71,6 +76,7 @@ class Controller {
     static registerUser(req, res) {
         let { full_name, address, email, password } = req.body
 
+        //Note: Tidak disarankan menyimpan password langsung ke database tanpa enkripsi. Bisa pakai library bcryptjs
         let data = {
             full_name: full_name,
             address: address,
@@ -125,6 +131,7 @@ class Controller {
             updatedAt: new Date()
         }
 
+        //Note: Apakah tidak ada proses pengurangan stock item setelah order dibuat?
         order.create(data).then((result) => {
             console.log(result.dataValues);
         }).catch((err) => console.error(err))
@@ -143,6 +150,7 @@ class Controller {
             ord.item_id = item_id ? item_id : ord.item_id
             ord.quantity_order = quantity_order ? quantity_order : ord.quantity_order
 
+            //Note: kalau sudah pakai await tidak perlu .then lagi
             await order.update({ user_id, item_id, quantity_order }, {
                 where: { id: id }
             })
@@ -171,7 +179,8 @@ class Controller {
         item.create(data).then((result) => {
             console.log(result.dataValues);
         }).catch((err) => console.error(err))
-
+        
+        // res.status harusnya didalam then jika tidak pakai async await
         return res.status(201).json(formatRes(data));
     }
 
@@ -186,6 +195,7 @@ class Controller {
             barang.item_price = item_price ? item_price : barang.item_price
             barang.item_stock = item_stock ? item_stock : barang.item_stock
 
+            //Note: kalau sudah pakai await tidak perlu .then lagi
             await item.update({ item_name, item_price, item_stock }, {
                 where: { id: id }
             })
@@ -211,6 +221,7 @@ class Controller {
             usr.email = email ? email : usr.email
             usr.password = password ? password : usr.password
 
+            //Note: kalau sudah pakai await tidak perlu .then lagi
             await user.update({ full_name, address, email, password }, {
                 where: { id: id }
             })
@@ -227,6 +238,7 @@ class Controller {
 
     static async deleteProduct(req, res) {
         let id = +req.params.id;
+        //Note: promise ini harusnya didalam try juga
         let barang = await item.getById(id)
 
         try {
@@ -243,6 +255,7 @@ class Controller {
     }
     static async deleteUser(req, res) {
         let id = +req.params.id;
+        //Note: promise ini harusnya didalam try juga
         let usr = await user.getById(id)
 
         try {
@@ -259,6 +272,7 @@ class Controller {
     }
     static async deleteOrder(req, res) {
         let id = +req.params.id;
+        //Note: promise ini harusnya didalam try juga
         let ord = await order.getById(id)
         try {
             await order.destroy({

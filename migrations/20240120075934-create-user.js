@@ -25,6 +25,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      //Note: kolom full_name pakai snake_case sedangkan createdAt pakai camelCase. Bisa dibuat konsisten aja pilih salah 1. Note ini berlaku untuk table lain juga
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
