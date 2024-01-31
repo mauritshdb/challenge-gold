@@ -93,7 +93,11 @@ class Controller {
         const password = req.body.password.trim();
         try {
             let usr = await user.findOne({ where: { email: email } });
-            if (password !== usr.password) {
+            if(usr == null) {
+                console.log("Auth: Email not found!");
+                return res.status(422).json(formatRes(null, "Incorrect email!"))
+            }
+            else if (password !== usr.password) {
                 console.log("Auth: Password Incorrect!");
                 return res.status(422).json(formatRes(null, "Incorrect password!"))
             }
