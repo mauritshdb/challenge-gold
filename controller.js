@@ -89,11 +89,14 @@ class Controller {
 
     static async login(req, res) {
         //code here lmao;
-        const email = req.body.email.trim();
-        const password = req.body.password.trim();
+        const email = req.body.email;
+        const password = req.body.password;
         try {
+            if (email == null) {
+                return res.status(404).json(formatRes("", "Email Not Found"))
+            } else if (password == null) return res.status(200).json(formatRes("", "Password cannot be empty"))
             let usr = await user.findOne({ where: { email: email } });
-            if(usr == null) {
+            if (usr == null) {
                 console.log("Auth: Email not found!");
                 return res.status(422).json(formatRes(null, "Incorrect email!"))
             }
